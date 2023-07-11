@@ -1,8 +1,14 @@
+export enum Role {
+  User = 1,
+  Admin = 2,
+}
+
 export type User = {
   id: string;
   name: string;
   email: string;
-  createdAt: string;
-  updatedAt: string;
-  birthdate: string;
+  createdAt: Date;
+  updatedAt: Date;
+  birthdate: Date;
+  role: Role;
 };
