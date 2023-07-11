@@ -4,20 +4,18 @@ import { UpdateUserDTO } from './dtos/IUpdateUser.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
 import { convertDate } from './utils/convertDate';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prismaService: PrismaService) {}
-  data = [
-    {
-      id: '1',
-      name: 'test',
-      email: 'test@email.com',
-    },
-  ];
 
   async create(data: CreateUserDTO) {
     const birthDate = convertDate(data.birthDate);
+
+    const salt = 10;
+
+    data.password = await bcrypt.hash(data.password, salt);
 
     return await this.prismaService.user.create({
       data: {
@@ -27,6 +25,8 @@ export class UserService {
         name: data.name,
         createdAt: new Date(),
         updatedAt: new Date(),
+        password: data.password,
+        role: data.role || 1,
       },
     });
   }
@@ -46,10 +46,18 @@ export class UserService {
       throw new BadRequestException('user not found.');
     }
 
+    delete user.password;
+
     return user;
   }
 
   async update(id: string, data: UpdateUserDTO) {
+    if (data.password) {
+      const salt = 10;
+
+      data.password = await bcrypt.hash(data.password, salt);
+    }
+
     return await this.prismaService.user.update({
       where: { id: id },
       data: data,
