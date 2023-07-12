@@ -22,13 +22,20 @@ export class PostService {
   }
 
   async list() {
-    return await this.prismaService.post.findMany();
+    return await this.prismaService.post.findMany({
+      include: { user: true, comment: true },
+    });
   }
 
   async find(postId: string) {
     const postData = await this.prismaService.post.findFirst({
       where: { id: postId },
-      include: { user: true },
+      include: {
+        user: true,
+        comment: {
+          include: { user: true },
+        },
+      },
     });
 
     if (!postData) {
@@ -48,7 +55,7 @@ export class PostService {
         title: data.title,
         updatedAt: new Date(),
       },
-      include: { user: true },
+      include: { user: true, comment: true },
     });
 
     if (!postData) {

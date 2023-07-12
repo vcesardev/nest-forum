@@ -5,6 +5,7 @@ import { UserModule } from './modules/user/user.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { PostModule } from './modules/posts/post.module';
+import { CommentsModule } from './modules/comments/comments.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { PostModule } from './modules/posts/post.module';
     PrismaModule,
     forwardRef(() => AuthModule),
     forwardRef(() => PostModule),
+    forwardRef(() => CommentsModule),
   ],
   controllers: [AppController],
   providers: [AppService],
