@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsStrongPassword, IsInt } from 'class-validator';
+import { IsString, IsEmail, IsStrongPassword } from 'class-validator';
 import { Role } from '../../../types/User';
 
 export class CreateUserDTO {
