@@ -40,6 +40,7 @@ export class UserService {
       where: {
         id: id,
       },
+      include: { post: true },
     });
 
     if (!user) {
