@@ -8,7 +8,7 @@ import { CreateCommentDTO } from './dtos/ICreateComment.dto';
 export class CommentsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async comment(postId: string, data: CreateCommentDTO, userId: string) {
+  async comment(postId: string, data: CreateCommentDTO, authorId: string) {
     return await this.prismaService.comment.create({
       data: {
         content: data.content,
@@ -16,7 +16,7 @@ export class CommentsService {
 
         createdAt: new Date(),
         post: { connect: { id: postId } },
-        user: { connect: { id: userId } },
+        author: { connect: { id: authorId } },
       },
     });
   }
@@ -24,7 +24,7 @@ export class CommentsService {
   async find(id: string) {
     return await this.prismaService.comment.findFirst({
       where: { id: id },
-      include: { post: true, user: true },
+      include: { post: true, author: true },
     });
   }
 

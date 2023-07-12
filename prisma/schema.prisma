@@ -14,7 +14,7 @@ model comment {
   updatedAt DateTime?
   postId    String
   authorId  String
-  user      user      @relation(fields: [authorId], references: [id], map: "Comment_authorId_fkey")
+  author    user      @relation(fields: [authorId], references: [id], map: "Comment_authorId_fkey")
   post      post      @relation(fields: [postId], references: [id], map: "Comment_postId_fkey")
 
   @@index([postId], map: "Comment_postId_fkey")
