@@ -6,12 +6,14 @@ import {
   Request,
   UseGuards,
   Get,
+  Patch,
+  Delete,
 } from '@nestjs/common';
 import { AuthGuard } from '../auth/guards/auth.guard';
-import { PostGuard } from '../posts/guards/postGuard.guard';
 import { CreateCommentDTO } from './dtos/ICreateComment.dto';
 import { CommentsService } from './comments.service';
 import { User } from '../../types/User';
+import { EditCommentDTO } from './dtos/IEditComment.dto';
 
 @UseGuards(AuthGuard)
 @Controller('comments')
@@ -27,7 +29,6 @@ export class CommentsController {
     const user: User = req.user;
     const userId = user.id;
     return await this.commentService.comment(id, body, userId);
-    //coment
   }
 
   @Get(':id')
@@ -35,13 +36,13 @@ export class CommentsController {
     return await this.commentService.find(id);
   }
 
-  @Post(':id')
-  async edit() {
-    //edit
+  @Patch(':id')
+  async edit(@Param('id') id: string, @Body() data: EditCommentDTO) {
+    return await this.commentService.edit(id, data);
   }
 
-  @Post(':id')
-  async delete() {
-    //delete
+  @Delete(':id')
+  async delete(@Param('id') id: string) {
+    return await this.commentService.delete(id);
   }
 }
