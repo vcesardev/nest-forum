@@ -1,3 +1,5 @@
+import { Post } from './Post';
+
 export enum Role {
   User = 1,
   Admin = 2,

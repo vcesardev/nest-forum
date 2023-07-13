@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE `post` MODIFY `updatedAt` DATETIME(3) NULL;
+
+-- AlterTable
+ALTER TABLE `user` MODIFY `updatedAt` DATETIME(3) NULL DEFAULT CURRENT_TIMESTAMP(3);

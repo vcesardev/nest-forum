@@ -8,13 +8,13 @@ import { EditPostDTO } from './dtos/IEditPost.dto';
 export class PostService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(userId: string, data: CreatePostDTO) {
+  async create(authorId: string, data: CreatePostDTO) {
     return await this.prismaService.post.create({
       data: {
         content: data.content,
         id: uuidv4(),
         title: data.title,
-        user: { connect: { id: userId } },
+        author: { connect: { id: authorId } },
         createdAt: new Date(),
         updatedAt: null,
       },
@@ -22,20 +22,27 @@ export class PostService {
   }
 
   async list() {
-    return await this.prismaService.post.findMany();
+    return await this.prismaService.post.findMany({
+      include: { author: true, comment: true },
+    });
   }
 
   async find(postId: string) {
     const postData = await this.prismaService.post.findFirst({
       where: { id: postId },
-      include: { user: true },
+      include: {
+        author: true,
+        comment: {
+          include: { author: true },
+        },
+      },
     });
 
     if (!postData) {
       throw new BadRequestException('post not found.');
     }
 
-    delete postData.user.password;
+    delete postData.author.password;
 
     return postData;
   }
@@ -48,14 +55,14 @@ export class PostService {
         title: data.title,
         updatedAt: new Date(),
       },
-      include: { user: true },
+      include: { author: true, comment: true },
     });
 
     if (!postData) {
       throw new BadRequestException('post not found.');
     }
 
-    delete postData.user.password;
+    delete postData.author.password;
 
     return postData;
   }
